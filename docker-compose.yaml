@@ -1,0 +1,32 @@
+services:
+
+  web:
+    build:
+      context: .
+      target: runtime
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    entrypoint: ["/app/entrypoint.sh"]   
+    depends_on:
+      db:
+        condition: service_healthy
+
+        
+  db:
+    image: postgres:14-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
