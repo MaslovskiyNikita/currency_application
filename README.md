@@ -7,15 +7,16 @@
 
 1. Клонируем репозиторий и создаем .env:
 
-git clone https://github.com/MaslovskiyNikita/currency_application
+```bash
+git clone https://github.com/MaslovskiyNikita/currency_application 
 cd currency_application
 cp .env.example .env
+```
 
 2. Поднимаем приложение:
-
+```bash
 docker-compose up --build
-
-
+```
 **Документация API**
 Swagger UI: http://127.0.0.1:8000/api/docs/
 
