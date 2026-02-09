@@ -50,12 +50,12 @@ class RateDetailView(GenericAPIView):
 
     @extend_schema(parameters=[RateGetInputSerializer])
     def get(self, request, *args, **kwargs):
-
         input_serializer = RateGetInputSerializer(data=request.query_params)
         input_serializer.is_valid(raise_exception=True)
 
         target_date = input_serializer.validated_data['date']
         code = input_serializer.validated_data['code']
+
         rate, trend, previous_rate = get_rate_with_trend(code, target_date)
 
         if not rate:
@@ -63,19 +63,13 @@ class RateDetailView(GenericAPIView):
                 {"error": "Rate not found. Load data first."}, 
                 status=status.HTTP_404_NOT_FOUND
             )
-
-        serializer = self.get_serializer(rate)
-        data = serializer.data
-
-        data['trend'] = trend
+            
+        context = {
+            "request": request,
+            "trend": trend,
+            "previous_rate": previous_rate
+        }
         
-        if previous_rate:
-            data['previous_official_rate'] = previous_rate.official_rate
-            data['previous_date'] = previous_rate.date
-            data['diff'] = rate.official_rate - previous_rate.official_rate
-        else:
-            data['previous_official_rate'] = None
-            data['previous_date'] = None
-            data['diff'] = None
+        serializer = self.get_serializer(rate, context=context)
         
-        return Response(data)
+        return Response(serializer.data)

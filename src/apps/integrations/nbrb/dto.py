@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from decimal import Decimal
 from datetime import datetime
 
-@dataclass()
+@dataclass(frozen=True)
 class NBRBRateDTO:
     cur_id: int
     date: datetime

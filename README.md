@@ -25,3 +25,10 @@ Swagger UI: http://127.0.0.1:8000/api/docs/
 
 2. Получение курса и аналитики (GET) http://127.0.0.1:8000/api/v1/rates/rate/?date=2023-10-25&code=USD 
 
+
+**Tests**
+
+```bash
+docker-compose exec web pytest -v
+```
+
